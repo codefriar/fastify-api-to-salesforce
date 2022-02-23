@@ -43,7 +43,7 @@ export default class ApiMiddleware {
         json.records.forEach((record) => {
             records.push(new sfAccount(record).account);
         });
-        console.debug(records);
+
         try {
             const job = this.connection.bulk.createJob("Account", "insert");
             const batch = job.createBatch();
