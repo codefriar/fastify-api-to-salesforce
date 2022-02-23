@@ -2,6 +2,7 @@ import jsForce from "jsforce";
 import s2s from "../lib/salesforce-server-server-auth.js";
 import sfAccount from "../models/sfAccount.js";
 import fetch from "node-fetch";
+import once from "events";
 
 export default class ApiMiddleware {
     async fetchParseAndCreate(request, reply) {
@@ -16,9 +17,15 @@ export default class ApiMiddleware {
          */
 
         let payload = JSON.parse(request.body);
-        console.debug(payload);
         const JsonBody = await this.makeAPIRequest(payload.uri);
-        return await this.createRecordsInSalesforce(JsonBody);
+        const response = await this.createRecordsInSalesforce(JsonBody);
+
+        if (response.isSuccess) {
+            reply.code(200);
+        } else {
+            reply.code(500);
+        }
+        reply.send(response);
     }
 
     // makes a fetch call, parses response to json.
@@ -31,23 +38,30 @@ export default class ApiMiddleware {
      * we're just going to assume that the 'records' key of the json contains things we want to put into Salesforce.
      */
     async createRecordsInSalesforce(json) {
-        this.connection = new s2s().connect();
+        this.connection = await new s2s().connect();
         let records = [];
         json.records.forEach((record) => {
             records.push(new sfAccount(record).account);
         });
         console.debug(records);
         try {
-            job = connection.bulk.insert("Account", "insert");
-            batch = job.createBatch();
+            const job = this.connection.bulk.createJob("Account", "insert");
+            const batch = job.createBatch();
             batch.execute(records);
             // listen for events
             batch.on("queue", function (batchInfo) {
                 batch.poll(1000, 2000);
             });
-            batch.on("response", function (batchInfo) {
-                return batchInfo.response;
-            });
+
+            const batchInfo = await once(batch, "response");
+            return {
+                results: batchInfo,
+                isSuccess: batchInfo.every((obj) => obj.success),
+            };
+
+            // batch.on("response", function (batchInfo) {
+
+            // });
         } catch (err) {
             console.log(err);
             throw new Error(

@@ -11,6 +11,7 @@ import Fastify from "fastify";
 // Setup the logger
 const fastify = Fastify({
     logger: true,
+    prettyPrint: true,
 });
 
 // Import our routes
