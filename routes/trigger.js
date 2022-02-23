@@ -20,7 +20,7 @@ export default class ApiMiddleware {
         const JsonBody = await this.makeAPIRequest(payload.uri);
         const response = await this.createRecordsInSalesforce(JsonBody);
 
-        if (response.isSuccess) {
+        if (response.every((obj) => obj.success)) {
             reply.code(200);
         } else {
             reply.code(500);
@@ -53,11 +53,9 @@ export default class ApiMiddleware {
                 batch.poll(1000, 2000);
             });
 
-            const batchInfo = await once(batch, "response");
-            return {
-                results: batchInfo,
-                isSuccess: batchInfo.every((obj) => obj.success),
-            };
+            return await batch.once("response", function (batchInfo) {
+                return batchInfo;
+            });
 
             // batch.on("response", function (batchInfo) {
 
