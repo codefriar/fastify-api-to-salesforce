@@ -43,3 +43,5 @@ $RECYCLE.BIN/
 
 # Scratch Files - not for commit
 /Scratch/
+
+.env
