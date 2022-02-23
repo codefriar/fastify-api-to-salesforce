@@ -1,0 +1,50 @@
+{
+    "name": "fastify-api-to-sf",
+    "version": "1.0.0",
+    "type": "module",
+    "description": "Example -opinionated- Fastify App on Heroku that makes API calls, parses the JSON response and creates Salesforce Records with the details of the response. ",
+    "main": "server.js",
+    "jest": {
+        "collectCoverage": true
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "dotenv": "^16.0.0",
+        "fastify": "^3.27.2",
+        "jsforce": "^1.11.0",
+        "node-fetch": "^3.2.0",
+        "sf-jwt-token": "^1.3.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://git@github.com:codefriar/fastify-api-to-sf.git"
+    },
+    "bugs": {
+        "url": "https://github.com/codefriar/fastify-api-to-sf/issues"
+    },
+    "homepage": "https://github.com/codefriar/fastify-api-to-sf",
+    "scripts": {
+        "postinstall": "husky install",
+        "precommit": "lint-staged",
+        "start": "node server.js",
+        "apex-server": "node node_modules/prettier-plugin-apex/bin/start-apex-server.js",
+        "test": "jest --no-cache",
+        "lint": "eslint . --ext .js",
+        "prettier": "prettier --write \"**/*.{html,js,json,md,xml,yaml,yml}\""
+    },
+    "lint-staged": {
+        "**/*.{cls,cmp,component,css,html,js,json,md,page,trigger,xml,yaml,yml}": [
+            "prettier --write"
+        ]
+    },
+    "volta": {
+        "node": "16.13.2",
+        "npm": "8.1.2"
+    },
+    "devDependencies": {
+        "eslint": "^8.9.0",
+        "husky": "^7.0.4",
+        "prettier": "^2.5.1"
+    }
+}
