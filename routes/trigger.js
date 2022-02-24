@@ -56,10 +56,6 @@ export default class ApiMiddleware {
             return await batch.once("response", function (batchInfo) {
                 return batchInfo;
             });
-
-            // batch.on("response", function (batchInfo) {
-
-            // });
         } catch (err) {
             console.log(err);
             throw new Error(

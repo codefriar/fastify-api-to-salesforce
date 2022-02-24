@@ -22,8 +22,9 @@ fastify.register(routes);
 
 // Actually start the server.
 const start = async () => {
+    const port = process.env.PORT || 3000;
     try {
-        await fastify.listen(3000, "0.0.0.0");
+        await fastify.listen(port, "0.0.0.0");
     } catch (err) {
         fastify.log.error(err);
         process.exit(1);
