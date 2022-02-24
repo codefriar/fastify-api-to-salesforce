@@ -6,18 +6,36 @@
  */
 
 // Import the Fastify framework
+// Fastify works with both Common.js (node.js) and ESM (ES Modules).
+// The ESM version is recommended for production.
+// I chose to build this entirely with ESM modules because it's a lot easier to work with.
+// and LWC uses ESM modules.
 import Fastify from "fastify";
 
-// Setup the logger
+// Setup the the Fastify  logger. I like pretty formatted logging
+// so I included pino-pretty in the dev-dependencies.
 const fastify = Fastify({
     logger: true,
     prettyPrint: true,
 });
 
+/**
+ * It's entirely possible to put all your logic into this server.js file
+ * but that's ugly, and we can do better.
+ * In this app, 'routes' refer to restful routes and they are defined in
+ * their own files under routes/
+ *
+ * The routes/index.js file imports individual routes. As you build out
+ * your app, you'll add more routing files, and then add them to index.js
+ */
+
 // Import our routes
 import { routes } from "./routes/index.js";
 
-// Tell Fastify to use our routes
+/**
+ * This line pulls all routes known to routes/index.js and registers them
+ * with Fastify.
+ */
 fastify.register(routes);
 
 // Actually start the server.
