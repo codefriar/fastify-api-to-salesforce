@@ -7,8 +7,8 @@
     "jest": {
         "collectCoverage": true
     },
-    "author": "",
-    "license": "ISC",
+    "author": "Kevin Poorman (@Codefriar)",
+    "license": "CC0-1.0",
     "dependencies": {
         "dotenv": "^16.0.0",
         "fastify": "^3.27.2",
